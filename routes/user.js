@@ -12,15 +12,15 @@ const User = require("../models/userModel");
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password, isSeller } = req.body;
-      const existingUser = await User.findOne({
-        where: {
-          email,
-        },
-      });
+    const existingUser = await User.findOne({
+      where: {
+        email,
+      },
+    });
 
     if (existingUser) {
       res.status(403).json({
-        err: "User already exist"
+        err: "User already exist",
       });
     }
 
@@ -32,7 +32,7 @@ router.post("/signup", async (req, res) => {
 
     if (!validateEmail(email)) {
       return res.status(400).json({
-        err: "Invalid Email"
+        err: "Invalid Email",
       });
     }
 
@@ -40,7 +40,7 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({
         err: "Invalid Password: password must be atleast 8 characters long and must include atleast one uppercase, one lowercase, one digit, one special character ",
       });
-      }
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = { name, email, isSeller, password: hashedPassword };
@@ -53,17 +53,61 @@ router.post("/signup", async (req, res) => {
     return res.status(500).send(error);
   }
 });
+router.post("/signin", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (email.length === 0) {
+      return res.status(400).json({
+        err: "please provide email",
+      });
+    }
+    if (password.length === 0) {
+      return res.status(400).json({
+        err: "please provide a password",
+      });
+    }
+    const existingUser = await User.findOne({
+      where: {
+        email,
+      },
+    });
+    if (!existingUser) {
+      return res.status(400).json({
+        err: "User not found",
+      });
+    }
+    const passwordMatch = await bcrypt.compare(password, existingUser.password);
+    if (!passwordMatch) {
+      return res.status(400).json({
+        err: "email or password mismatched",
+      });
+    }
+    const payload = { user: { id: existingUser.id } };
+    const bearerToken = await jwt.sign(payload, "SECRET MESSAGE", {
+      expiresIn: 360000,
+    });
 
-//const payload = { user: { id: existingUser.id } };
-// const bearerToken = await jwt.sign(payload, "SECRET MESSAGE", {
-//   expiresIn: 360000,
-// });
+    res.cookie("t", bearerToken, {
+      expire: new Date() + 9999,
+    });
 
-// res.cookie("t", bearerToken, {
-//   expires: new Date() + 9999,
-// });
+    res.status(200).json({
+      bearerToken,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
 
-// res.status(200).json({
-//   bearerToken,
-// });
+router.get("/signout", (req, res) => {
+    try {
+        res.clearCookie("t");
+        return res.status(200).json({
+            message: "cookie deleted"
+        })
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
 module.exports = router;
