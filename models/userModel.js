@@ -1,21 +1,29 @@
-const { DataTyes } = require('sequelize');
-const { createDB } = require('../config/db');
+const { DataTypes } = require("sequelize");
+const { createDB } = require("../config/db");
 
-const User = createDB.define('users', {
-    id: {
-        primaryKey: true,
-        allowNull: false,
-        autoIncrement: true,
-        type: DataTyes.INTEGER
-    },
-    name: DataTyes.STRING,
-    email: DataTyes.STRING,
-    password: DataTyes.STRING,
-    isSeller: {
-        type: DataTyes.BOOLEAN,
-        defaultValue: false,
-    }
-
+const User = createDB.define("users", {
+  id: {
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: true,
+    type: DataTypes.INTEGER,
+  },
+  //   name: {
+  //     type: DataTypes.STRING,
+  //   },
+  //   email: {
+  //     type: DataTypes.STRING,
+  //   },
+  //   password: {
+  //     type: DataTypes.STRING,
+  //   },
+  name: DataTypes.STRING,
+  email: DataTypes.STRING,
+  password: DataTypes.STRING,
+  isSeller: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 module.exports = User;

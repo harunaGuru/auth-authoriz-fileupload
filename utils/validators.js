@@ -6,8 +6,9 @@ const validateName = (name) => {
 
 const validateEmail = (email) => {
   const emailReg = new RegExp(
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-    "gm"
+    /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+    // /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+    //"gm"
   );
 
   return emailReg.test(email);
@@ -18,7 +19,9 @@ const validatePassword = (password) => {
 
   return reg.test(password);
 };
-
+// console.log(validateEmail("haruna.dauda@gmail.com"))
+// console.log(validatePassword("Haru123@"));
+// console.log(validateName("haroon"))
 module.exports = {
   validatePassword,
   validateEmail,
