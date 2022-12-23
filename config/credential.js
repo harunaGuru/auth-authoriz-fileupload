@@ -1,5 +1,5 @@
-const stripeKey =
-  "sk_test_51MHVCaG4ONlqz3xksUediF0uB6kqxDTxyDhsQc7yUFihnrNXiKN9Sqt86ylpHOS1LB7lTS6WsJlE19e1S4o8hZa600CDXWBdra";
+require("dotenv").config();
+const stripeKey = process.env.STRIPE_KEY;
 
 module.exports = stripeKey;
 
